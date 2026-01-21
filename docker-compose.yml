@@ -1,0 +1,58 @@
+services:
+  app:
+    build: .
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      EPG_BATCH_SIZE: ${EPG_BATCH_SIZE}
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["sleep", "infinity"]
+
+  db:
+    image: postgres:18-alpine
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  flyway:
+    image: flyway/flyway:11.20-alpine
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      -url=jdbc:postgresql://db:5432/${DB_NAME}
+      -user=${DB_USER}
+      -password=${DB_PASSWORD}
+      -connectRetries=60
+      migrate
+    volumes:
+      - ./.docker/flyway/sql:/flyway/sql
+    profiles:
+      - tools
+
+volumes:
+  pgdata:

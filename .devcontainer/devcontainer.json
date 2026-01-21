@@ -1,0 +1,24 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
+{
+  "name": "epg-parser",
+  "build": {
+    "context": "..",
+    "dockerfile": "../Dockerfile"
+  },
+  "postCreateCommand": "PATH_TO_SCRIPT=.devcontainer/post-create.sh && chmod +x $PATH_TO_SCRIPT && $PATH_TO_SCRIPT",
+  "remoteUser": "root",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "tomoki1207.pdf",
+        "DBCode.dbcode",
+        "SeyyedKhandon.firacode"
+      ]
+    }
+  },
+  "mounts": [
+    "source=${env:HOME}/.ssh,target=/root/.ssh,type=bind"
+  ]
+}

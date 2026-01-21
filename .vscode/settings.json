@@ -1,0 +1,21 @@
+{
+  "dbcode.connections": [
+    {
+      "connectionId": "E0MvxfOq9tHh8XOBml-oD",
+      "name": "main",
+      "driver": "postgres",
+      "connectionType": "host",
+      "host": "host.docker.internal",
+      "port": 5482,
+      "ssl": false,
+      "authMethod": "password",
+      "username": "root",
+      "password": "",
+      "savePassword": "secretStorage",
+      "database": "epg",
+      "readOnly": false,
+      "postConnectionSqlType": "inline",
+      "connectionTimeout": 30
+    }
+  ]
+}
